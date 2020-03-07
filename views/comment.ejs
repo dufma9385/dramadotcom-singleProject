@@ -1,0 +1,59 @@
+<!-- <body>
+    <div id="comment_div">
+        <table id="content_table">
+            <thead>
+                <tr>
+                    <th>dramatitle</th>
+                    <th>comment</th>
+                    <th>commenter</th>
+                    <th>delete</th>
+                </tr>
+            </thead>
+            <% for(let i=0; i<allresult.length; i++){ %>
+            <tbody>
+                <tr>
+                    <td><p><%= allresult[i].dramatitle %></p></td>
+                    <td><%= allresult[i].comment %></td>
+                    <td><%= allresult[i].commenter %></td>
+                    
+                    <td>
+                        <button class="btn btn-outline-dark" id="<%= allresult[i]._id %>" onclick="deleteMember(this.id)">delete</button>
+                    </td>
+                </tr>
+            </tbody>
+            <% } %>
+        </table>
+    </div>
+    
+</body>
+
+<script>
+    function deleteMember(_id){
+        //alert(data);
+        
+        $.post('/write/delete',{_id},function(returnData){
+            
+            alert(returnData.message);
+            // let comment_div = `<table id="content_table"><thead><tr><th>dramatitle</th><th>comment</th><th>commenter</th><th>delete</th></tr></thead>`;
+            //     returnData.allresult.forEach((e) => {
+            //         comment_div += `<tbody><tr><td>${e.dramatitle}</td><td>${e.comment}</td><td>${e.commenter}</td>`;
+            //         comment_div += `<td><button class="btn btn-outline-dark" onclick="deleteMember('${e._id}')">delete</button></td></tr></tbody>`;
+            //     });
+            //     comment_div += '</table>';
+            $('#comment_div').html(returnData);
+        });
+    }
+    // $(document).ready(function(){
+    //     $('#delete_bt').click(function(){
+    //         const _id = "<%=allresult._id %>";
+    //         const commenter = "<%=allresult.commenter %>";
+    //         const send_param ={
+    //             _id,commenter
+    //         }
+    //         $.post('/write/delete',{_id},function(returnData){
+    //             alert(returnData.message);
+    //             $('#comment_div').html(returnData);
+    //         });
+    //     });
+    // });
+</script> -->

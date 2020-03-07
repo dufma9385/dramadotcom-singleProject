@@ -1,0 +1,94 @@
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><h4>drama dot com</h4></li>
+        </ul>
+    </div>
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class='navbar-nav ml-auto'>
+            <li class="nav-item">
+                <p><%= name %>님 안녕하세요!</p>
+            </li>
+            <li class="nav-item">
+                <button id="logout_bt" class="btn btn-outline-dark">logout</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<body>
+
+    <div>
+        <div id="write_form"><h4>"<%= result.title %>"에 댓글을 남겨주세요!</h4></div>
+        <textarea id="review" cols="50" rows="10"></textarea><br>
+        <button id="upload_btn" class="btn btn-outline-dark">upload</button>
+        <button id="comments_view" class="btn btn-outline-dark">모든댓글보기</button><br>
+        <button id="dramalist_bt" class="btn btn-outline-dark">목록으로</button>
+    </div>
+    <br><br>
+
+    <div id="comment_div">
+
+    </div>
+
+    <script>
+        function deleteMember(_id){
+            //alert(data);
+            const dramatitle = "<%= result.title %>";
+            $.post('/write/delete',{_id,dramatitle},function(returnData){
+                alert(returnData.message);
+                let comment_div = `<table id="content_table"><thead><tr><th>dramatitle</th><th>comment</th><th>commenter</th><th>delete</th></tr></thead>`;
+                    returnData.allresult.forEach((e) => {
+                        comment_div += `<tbody><tr><td>${e.dramatitle}</td><td>${e.comment}</td><td>${e.commenter}</td>`;
+                        comment_div += `<td><button class="btn btn-outline-dark" onclick="deleteMember('${e._id}')">delete</button></td></tr></tbody>`;
+                    });
+                    comment_div += '</table>';
+                $('#comment_div').html(comment_div);
+            });
+        }
+        $(document).ready(function(){
+            $('#dramalist_bt').click(function(){
+                $.post('/write/getAllDrama',{}, function(returnData){
+                    $('#main').html(returnData);
+                });
+            });
+
+            $('#comments_view').click(function(){
+                const dramatitle = "<%=result.title %>";
+                
+                $.post('/write/getAllComments',{dramatitle},function(returnData){
+                    console.log(returnData.allresult);
+                    let comment_div = `<table id="content_table"><thead><tr><th>dramatitle</th><th>comment</th><th>commenter</th><th>delete</th></tr></thead>`;
+                    returnData.allresult.forEach((e) => {
+                        comment_div += `<tbody><tr><td>${e.dramatitle}</td><td>${e.comment}</td><td>${e.commenter}</td>`;
+                        comment_div += `<td><button class="btn btn-outline-dark" onclick="deleteMember('${e._id}')">delete</button></td></tr></tbody>`;
+                    });
+                    comment_div += '</table>';
+                    $('#comment_div').html(comment_div);
+                    //$('#comment_div').html(returnData); 
+                });
+            });
+
+            $('#upload_btn').click(function(){
+                const review = $('#review').val();
+                const dramatitle = "<%=result.title %>";
+                //alert(review+":"+title);
+                const send_param={
+                    review, dramatitle
+                };
+                $.post('/write/reviewUp', send_param, function(returnData){
+                    alert(returnData.message);
+                });
+                $('#review').val("");
+            });
+
+            $('#logout_bt').click(function(){
+            $.post('user/logout',{},function(returnData){
+                alert(returnData.message);
+                location.reload();
+            });
+        });
+        });
+        
+    </script>
+</body>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding-top: 20px;
+            background-color: azure;
+        }
+        #login_div{
+            display: inline-block;  
+            margin-top: 10%;
+        }
+        table{
+            margin: auto;
+            width: 700px;
+        }
+        nav{
+            margin-bottom: 10px;
+        }
+        thead{
+            background-color: #f8f9fa;
+        }
+        tbody{
+            border-top: 3px solid #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="main">
+        <h3>drama dot com</h3>
+        
+            <div id="login_div">
+                <input id="idEmail" placeholder="email"><br>
+                <input id='idPw' placeholder="pw"><br><br>
+                <button id='login_bt' class="btn btn-outline-dark">login</button>
+                <button id='sign_bt' class="btn btn-outline-dark">sign</button>
+            </div>
+            <br><hr>
+
+            <div id='sign_div' style="display:none;">
+                <input id='userEmail' placeholder="email"><br>
+                <input id='userPw' placeholder="pw"><br>
+                <input id='userName' placeholder="name"><br>
+                <input id='userAge' placeholder="Age"><br><br>
+                <button id='sing_in' class="btn btn-outline-dark">sing_in</button>
+            </div>
+       
+
+    </div>
+    <script>
+        
+        $(document).ready(function(){
+            $('#logout_bt').click(function(){
+                $.post('user/logout',{},function(returnData){
+                    alert(returnData.message);
+                    location.reload();
+                });
+                
+            });
+
+            $('#login_bt').click(function(){
+                const idEmail = $('#idEmail').val();
+                const idPw = $('#idPw').val();
+                const send_param={
+                    idEmail, idPw
+                }
+                if(idEmail&&idPw){
+                    $.post('user/login',send_param,function(returnData){
+                        $('#main').html(returnData);      
+                    });
+                }else{
+                    alert('email or password please');
+                }
+                $('#idEmail').val("");
+                $('#idPw').val("");
+            });
+
+
+            $('#sign_bt').click(function(){
+                $('#sign_div').show();
+            });
+            $('#sing_in').click(function(){
+                const userEmail = $('#userEmail').val();
+                const userPw = $('#userPw').val();
+                const userName = $('#userName').val();
+                const userAge = $('#userAge').val();
+
+                const send_param = {
+                    userEmail, userPw, userName, userAge
+                }
+                $.post('/user/sign',send_param,(returnData)=>{
+                    alert(returnData.message);
+                });
+                $('#userEmail').val("");
+                $('#userPw').val("");
+                $('#userName').val("");
+                $('#userAge').val("");
+                $('#sign_div').hide();
+            });
+        });
+    </script>
+</body>
+</html>
